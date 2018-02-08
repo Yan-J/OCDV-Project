@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+       #map {
+        height: 723px;
+        width: 150%;
+       }
+    </style>
+
+    <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+      <meta name="description" content="" />
+      <meta name="author" content="" />
+      <!--[if IE]>
+          <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+          <![endif]-->
+      <title>Map</title>
+  <link rel="stylesheet" href="https://cdn.bootcss.com/foundation/5.5.3/css/foundation.min.css">
+  <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+  <script src="https://cdn.bootcss.com/foundation/5.5.3/js/foundation.min.js"></script>
+  <script src="https://cdn.bootcss.com/foundation/5.5.3/js/vendor/modernizr.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+
+
+<!-- BOOTSTRAP CORE STYLE  -->
+<link href="assets/css/bootstrap.css" rel="stylesheet" />
+<!-- FONT AWESOME STYLE  -->
+<link href="assets/css/font-awesome.css" rel="stylesheet" />
+<!-- ANIMATE STYLE  -->
+<link href="assets/css/animate.css" rel="stylesheet" />
+<!-- FLEXSLIDER STYLE  -->
+<link href="assets/css/flexslider.css" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+
+
+
+  </head>
+  <body >
+    <div class="navbar navbar-inverse set-radius-zero" style="background-color:white;">
+
+           <div class="container" >
+               <div class="navbar-header" >
+
+                   <a class="" href="index.html">
+                       <img src="assets/img/logo1.png" />
+                   </a>
+
+               </div>
+               <div class="navbar-header">
+               <button class="btn btn-primary" style="background-color:#520088;">My FJC Portal</button>
+               <button class="btn btn-primary" style="background-color:#520088;">ESCAPE</button>
+   <!-- <strong>Support : </strong>  info@yourdomain.com -->
+               </div>
+
+
+       </div>
+      </div>
+
+       <!-- LOGO HEADER END-->
+
+
+
+
+
+
+    <div class="container-fluid" style="background-color:#6600AA;">
+    <h2 style="text-align:center;color:white"><br>OCDV Service Map Demo</h2><br>
+
+
+    <div class="row" style="margin-left: 150px;">
+
+      <div class="col-sm-4" style="background-color:#f1f1f1;">
+        <div style="margin-top: 10px; margin-bottom: 10px;">
+        <div id="cards">
+
+        </div>
+      </div>
+
+      </div>
+
+<div class="col-sm-8">
+
+    <div id="map"></div>
+
+</div>
+</div>
+    <script>
+    var map = null;
+
+
+function initialize() {
+  var mockdata = [
+    {
+      title: "NYC Health + Hospitals/Coney Island",
+      text: "2601 Ocean Parkway Brooklyn, New York"
+  },
+  {
+    title: "NYC Health + Hospitals/North Central Bronx",
+    text: "3424 Kossuth Avenue Bronx, New York"
+},
+{
+  title: "NYC Health + Hospitals/Lincoln",
+  text: "234 East 149th Street Bronx, New York"
+},
+{
+  title: "NYC Health + Hospitals/Jacobi",
+  text: "1400 Pelham Parkway South Bronx, New York"
+}
+];
+
+  var cards = document.getElementById('cards');
+
+  for (var i=0 ; i<mockdata.length; i++) {
+     var card = document.createElement("div");
+     card.className = "card text-center";
+     card.style.width =  "19rem";
+     card.style.margin = "0px";
+
+     var cardBody = document.createElement("div");
+     cardBody.className = "card-body";
+
+     var h4 = document.createElement("h4");
+     h4.className = "card-title";
+     h4.textContent = mockdata[i].title;
+     cardBody.appendChild(h4);
+
+     var p = document.createElement("p");
+     p.className = "card-text";
+     p.textContent = mockdata[i].text;
+     cardBody.appendChild(p);
+
+     var a = document.createElement("a");
+     a.className = "btn btn-primary";
+     a.textContent = "Go To Website";
+     a.href = "http://www.nychealthandhospitals.org/coneyisland";
+     cardBody.appendChild(a);
+
+     card.appendChild(cardBody);
+     cards.appendChild(card);
+  }
+
+
+
+
+  map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 12,
+          center: new google.maps.LatLng(40.036772,-74.520269), // 設定地圖中心點
+          mapTypeId: google.maps.MapTypeId.ROADMAP, // HYBRID,ROADMAP,SATELLITE,TERRAIN
+          styles: [
+            {elementType: 'geometry', stylers: [{color: '#242f3e'}]},
+            {elementType: 'labels.text.stroke', stylers: [{color: '#242f3e'}]},
+            {elementType: 'labels.text.fill', stylers: [{color: '#746855'}]},
+            {
+              featureType: 'administrative.locality',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#d59563'}]
+            },
+            {
+              featureType: 'poi',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#d59563'}]
+            },
+            {
+              featureType: 'poi.park',
+              elementType: 'geometry',
+              stylers: [{color: '#263c3f'}]
+            },
+            {
+              featureType: 'poi.park',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#6b9a76'}]
+            },
+            {
+              featureType: 'road',
+              elementType: 'geometry',
+              stylers: [{color: '#38414e'}]
+            },
+            {
+              featureType: 'road',
+              elementType: 'geometry.stroke',
+              stylers: [{color: '#212a37'}]
+            },
+            {
+              featureType: 'road',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#9ca5b3'}]
+            },
+            {
+              featureType: 'road.highway',
+              elementType: 'geometry',
+              stylers: [{color: '#746855'}]
+            },
+            {
+              featureType: 'road.highway',
+              elementType: 'geometry.stroke',
+              stylers: [{color: '#1f2835'}]
+            },
+            {
+              featureType: 'road.highway',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#f3d19c'}]
+            },
+            {
+              featureType: 'transit',
+              elementType: 'geometry',
+              stylers: [{color: '#2f3948'}]
+            },
+            {
+              featureType: 'transit.station',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#d59563'}]
+            },
+            {
+              featureType: 'water',
+              elementType: 'geometry',
+              stylers: [{color: '#17263c'}]
+            },
+            {
+              featureType: 'water',
+              elementType: 'labels.text.fill',
+              stylers: [{color: '#515c6d'}]
+            },
+            {
+              featureType: 'water',
+              elementType: 'labels.text.stroke',
+              stylers: [{color: '#17263c'}]
+            }
+          ]
+
+      });
+
+  addSite(map,'NAME1',40.7128,-74.0161,'ADDR1', 'hospitals');
+  addSite(map,'NAME2',40.7234,-74.0000,'ADDR2', 'hospitals');
+  addSite(map,'NAME3',40.7145,-74.0063,'ADDR3', 'hospitals');
+  addSite(map,'NAME4',40.7124,-74.0064,'ADDR4', 'hospitals');
+  addSite(map,'NAME5',40.7224,-74.0084,'ADDR5', 'hospitals');
+}
+
+
+var contentString = '<div id="content">'+
+    '<div id="siteNotice">'+
+    '</div>'+
+    '<h1 id="firstHeading" class="firstHeading">NYC Health + Hospitals/Lincoln</h1>'+
+    '<div id="bodyContent">'+
+    '<p><b>NYC Health + Hospitals/Lincoln</b>234 East 149th Street Bronx, New York</p>'+
+    '<p>Website: NYC Health + Hospitals/Lincoln, <a href="http://www.nychealthandhospitals.org/lincoln">'+
+    'http://www.nychealthandhospitals.org/lincoln</a> .</p>'+
+    '</div>'+
+    '</div>';
+
+
+var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
+var icons = {
+              police: {
+                icon: iconBase + 'police.png'
+              },
+              dining: {
+                icon: iconBase + 'dining.png'
+              },
+              hospitals: {
+                icon: iconBase + 'hospitals.png'
+              }
+            };
+
+var prev_infowindow = null;
+function addSite(map, siteDesc, lat, lng, address, type) {
+  var pt = new google.maps.LatLng(lat,lng);
+  var marker = new google.maps.Marker({
+              map: map,
+              position : pt,
+              icon: icons[type].icon,
+              title: siteDesc
+              });
+  var infowindow = new google.maps.InfoWindow({
+      content: contentString
+  });
+
+  google.maps.event.addListener(marker, 'click', function() {
+      if (prev_infowindow != null) prev_infowindow.close();
+      prev_infowindow = infowindow;
+      infowindow.open(map, marker);
+  });
+
+
+var LatLngList = new Array (new google.maps.LatLng (40.7128,-74.0099), new google.maps.LatLng (40.7128,-74.0060), new google.maps.LatLng (40.7128,-74.0061),new google.maps.LatLng (40.7128,-74.0060));
+//  Create a new viewpoint bound
+var bounds = new google.maps.LatLngBounds ();
+//  Go through each...
+for (var i = 0, LtLgLen = LatLngList.length; i < LtLgLen; i++) {
+//  And increase the bounds to take this point
+bounds.extend (LatLngList[i]);
+}
+//  Fit these bounds to the map
+map.fitBounds (bounds);
+
+}
+
+//$(document).ready(function() { initialize(); });
+
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDicb54d0YhuQx5YC665_fi9pVatDAWai8&callback=initialize">
+    </script>
+  </body>
+</html>
